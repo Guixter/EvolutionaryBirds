@@ -17,8 +17,27 @@ public class Genome {
 	// The weights of the neurons
 	public List<float> weights;
 
+	// Build the genome
+	public Genome() {
+		nbLayers = 0;
+		neuronsPerLayer = new List<int> ();
+		weights = new List<float> ();
+	}
+
 	// Clone the genome
 	public Genome Clone() {
-		// TODO (Guillaume)
+		Genome clone = new Genome ();
+
+		clone.nbLayers = nbLayers;
+
+		foreach (int neurons in neuronsPerLayer) {
+			clone.neuronsPerLayer.Add (neurons);
+		}
+
+		foreach (float weight in weights) {
+			clone.weights.Add (weight);
+		}
+
+		return clone;
 	}
 }
