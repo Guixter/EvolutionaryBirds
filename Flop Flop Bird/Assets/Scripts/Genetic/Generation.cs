@@ -7,16 +7,11 @@ using UnityEngine;
  */
 public class Generation {
 
-	private List<Genome> genomes;
+	public List<Genome> genomes;
 
 	// Build the generation
 	public Generation() {
 		genomes = new List<Genome> ();
-	}
-
-	// Add a genome to the generation
-	public void AddGenome(Genome g) {
-		genomes.Add (g);
 	}
 
 	// Breed 2 genomes to get children
@@ -42,6 +37,8 @@ public class Generation {
 	public Generation NextGeneration() {
 		Generation next = new Generation();
 
+		// TODO
+
 		/*
 		// Elitism
 		for (int i = 0; i < GeneticManager.POPULATION * GeneticManager.ELITISM_FACTOR; i++) {
@@ -51,6 +48,22 @@ public class Generation {
 		}
 		*/
 
+		// TODO : set the scores to 0
+
 		return next;
+	}
+
+	// Fill the generation with random genomes.
+	public void RandomGeneration() {
+		for (int i = 0; i < GeneticManager.POPULATION; i++) {
+			Genome g = new Genome ();
+			g.neuronsPerLayer.Add (2);
+			g.neuronsPerLayer.Add (2);
+			g.neuronsPerLayer.Add (1);
+			for (int j = 0; j < 5; j++) {
+				g.weights.Add (Random.value * 2 - 1);
+			}
+			genomes.Add (g);
+		}
 	}
 }

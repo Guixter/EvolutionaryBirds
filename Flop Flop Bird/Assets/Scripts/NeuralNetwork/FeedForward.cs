@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FeedForward {
-
+	/*
     private static class Layer {
         private double[] biases;
         private double[] weights;
         /**
          *
-         */
+         *
         public Layer(int weights, int biases, int[] range) {
             this.biases = new double[biases];
             this.weights = new double[weights];
@@ -62,7 +62,7 @@ public class FeedForward {
      * inputLayer : 2 neurons
      * hiddenLayer 1 : 2 neurons , 1 bias
      * outputLayer : 1 neuron
-     */     
+     *  
     public FeedForward(int[,] layers, int[] range) {
         for (int i = 0; i < layers.length; i++) {
             if (layers[i].length == 1) {
@@ -76,7 +76,7 @@ public class FeedForward {
 
     /**
      * Y = WX + bias
-     */
+     *
     public double[] Forward(double[] inputLayer) {
         if (this.layers.length >= 2) {
             for (int i = 1; i < this.layers.length) {
@@ -85,5 +85,5 @@ public class FeedForward {
         }
         return this.layers[this.layers.length-1];
     }
-
+	*/
 }
