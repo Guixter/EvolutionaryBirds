@@ -7,7 +7,18 @@ using UnityEngine;
  */
 public class Generation {
 
-	public List<Genome> genomes;
+	// Some static constants
+	public static int POPULATION = 10;
+	public static float ELITISM_FACTOR = .2f;
+	public static float RANDOM_FACTOR = .2f;
+	public static float MUTATION_RATE = .1f;
+	public static float MUTATION_RANGE = .5f;
+	public static int NB_CHILDREN = 2;
+
+	// Properties;
+	public List<Genome> genomes { get; set; }
+
+	////////////////////////////////////////////////////////////////
 
 	// Build the generation
 	public Generation() {
@@ -18,7 +29,7 @@ public class Generation {
 	public List<Genome> BreedGenomes(Genome g1, Genome g2) {
 		List<Genome> children = new List<Genome> ();
 
-		for (int i = 0; i < GeneticManager.NB_CHILDREN; i++) {
+		for (int i = 0; i < NB_CHILDREN; i++) {
 			Genome child = g1.Clone ();
 
 			for (int j = 0; j < child.weights.Count; j++) {
@@ -36,13 +47,13 @@ public class Generation {
 	// Compute the next generation
 	public Generation NextGeneration() {
 		Generation next = new Generation();
-
+		next.RandomGeneration ();
 		// TODO
 
 		/*
 		// Elitism
-		for (int i = 0; i < GeneticManager.POPULATION * GeneticManager.ELITISM_FACTOR; i++) {
-			if (next.genomes.Count < GeneticManager.POPULATION) {
+		for (int i = 0; i < POPULATION * ELITISM_FACTOR; i++) {
+			if (next.genomes.Count < POPULATION) {
 
 			}
 		}
@@ -55,7 +66,8 @@ public class Generation {
 
 	// Fill the generation with random genomes.
 	public void RandomGeneration() {
-		for (int i = 0; i < GeneticManager.POPULATION; i++) {
+		genomes.Clear ();
+		for (int i = 0; i < POPULATION; i++) {
 			Genome g = new Genome ();
 			g.neuronsPerLayer.Add (2);
 			g.neuronsPerLayer.Add (2);

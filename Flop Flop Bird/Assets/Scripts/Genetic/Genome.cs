@@ -8,7 +8,7 @@ using UnityEngine;
  */
 public class Genome {
 
-	public float score;
+	public float fitness;
 
 	// The number of layers in the neural network, including the input and the output
 	public int nbLayers;
@@ -16,15 +16,19 @@ public class Genome {
 	// The number of neurons in each layer
 	public List<int> neuronsPerLayer;
 
-	// The weights of the neurons
+	// The thresholds of the neurons
+	public List<float> thresholds;
+
+	// The weights of the synapses
 	public List<float> weights;
 
 	// Build the genome
 	public Genome() {
 		nbLayers = 0;
-		score = 0;
+		fitness = 0;
 		neuronsPerLayer = new List<int> ();
 		weights = new List<float> ();
+		thresholds = new List<float> ();
 	}
 
 	// Clone the genome
@@ -32,7 +36,7 @@ public class Genome {
 		Genome clone = new Genome ();
 
 		clone.nbLayers = nbLayers;
-		clone.score = score;
+		clone.fitness = fitness;
 
 		foreach (int neurons in neuronsPerLayer) {
 			clone.neuronsPerLayer.Add (neurons);
@@ -40,6 +44,10 @@ public class Genome {
 
 		foreach (float weight in weights) {
 			clone.weights.Add (weight);
+		}
+
+		foreach (float threshold in thresholds) {
+			clone.thresholds.Add (threshold);
 		}
 
 		return clone;

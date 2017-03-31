@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Pipe : MonoBehaviour {
 
+	// Parameters
 	public GameObject upPipe;
 	public GameObject downPipe;
 
-	public float xPos;
-	public float yPos;
+	// Properties
+	public float xPos { get; set; }
+	public float yPos { get; set; }
+
+	////////////////////////////////////////////////////////////////
 
 	// Initialize the pipe
 	public void Initialize (float xPos, float yPos, float yGap) {

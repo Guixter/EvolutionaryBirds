@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * The Bird Player class.
+ */
 public class BirdPlayer : Bird {
 
-	public override void OnUpdate () {
+	// Called when the bird is updated
+	protected override void OnUpdate () {
 		if (Input.GetKeyDown ("space")) {
 			Fly ();
 		}

@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
+	// Private attributes
 	private DataManager dataManager;
-	private GeneticManager geneticManager;
 	private GameObject player;
 	private List<GameObject> bots;
 	private float screenWidth;
@@ -18,11 +18,8 @@ public class GameManager : MonoBehaviour {
 	private List<GameObject> pipes;
 	private int lastGateCrossed;
 
-
-	public GameObject AIPrefab;
-	public GameObject PlayerPrefab;
-	public GameObject BackgroundPrefab;
-	public GameObject PipePrefab;
+	// Parameters
+	public GameObject AIPrefab, PlayerPrefab, BackgroundPrefab, PipePrefab;
 	public float PipesXGap, PipesYGap;
 	public Text GUIAliveBots, GUIPipes, GUIFitness, GUIGeneration;
 
@@ -133,8 +130,8 @@ public class GameManager : MonoBehaviour {
 		GUIFitness.text = "Fitness : " + player.GetComponent<Bird>().fitness.ToString("F2");
 	}
 
-	// Update the end of the game
-	private void UpdateEndGame() {
+	// Update the menus
+	private void UpdateMenus() {
 		if (player.GetComponent<Bird> ().dead) {
 			bool victory = true;
 
@@ -146,6 +143,8 @@ public class GameManager : MonoBehaviour {
 			}
 
 			GetComponent<MenuManager> ().ShowEndMenu (victory);
+		} else if (Input.GetKeyDown("escape")) {
+			GetComponent<MenuManager> ().ShowPauseMenu ();
 		}
 	}
 
@@ -155,7 +154,7 @@ public class GameManager : MonoBehaviour {
 		UpdateDecor ();
 		UpdatePipes ();
 		UpdateGUI ();
-		UpdateEndGame ();
+		UpdateMenus ();
 	}
 
 }

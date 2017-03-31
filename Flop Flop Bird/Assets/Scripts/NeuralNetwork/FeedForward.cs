@@ -3,55 +3,57 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FeedForward {
-	/*
-    private static class Layer {
-        private double[] biases;
-        private double[] weights;
+	
+    private class Layer {
+
+        public float[] biases;
+        public float[] weights;
+		public Layer previousLayer;
+
         /**
          *
-         *
+         */
         public Layer(int weights, int biases, int[] range) {
-            this.biases = new double[biases];
-            this.weights = new double[weights];
-            Random rand = new Random(Environment.TickCount);
+            this.biases = new float[biases];
+            this.weights = new float[weights];
             for (int i = 0; i < weights; i++) {
-                if (range.length == 1) {
-                    this.weights[i] = rand.Next(range[0]) * .1d;
-                } else if (range.length == 2) {
-                    this.weights[i] = rand.Next(range[0], range[1]) * .1d;
+				if (range.Length == 1) {
+					this.weights[i] = Random.Range(0, range[0]) * .1f;
+                } else if (range.Length == 2) {
+					this.weights[i] = Random.Range(range[0], range[1]) * .1f;
                 } else {
-                    this.weights[i] = rand.Next(-1.0, 1.0) * .1d;
+					this.weights[i] = Random.Range(-1.0f, 1.0f) * .1f;
                 }
             }
             for (int i = 0; i < biases; i++) {
-                if (range.length == 1) {
-                    this.biases[i] = rand.Next(range[0]) * .1d;
-                } else if (range.length == 2) {
-                    this.biases[i] = rand.Next(range[0], range[1]) * .1d;
+                if (range.Length == 1) {
+					this.biases[i] = Random.Range(0, range[0]) * .1f;
+                } else if (range.Length == 2) {
+					this.biases[i] = Random.Range(range[0], range[1]) * .1f;
                 } else {
-                    this.biases[i] = rand.Next(-1.0, 1.0) * .1d;
+                    this.biases[i] = Random.Range(-1.0f, 1.0f) * .1f;
                 }
             }
         }
 
-        public static double Sigmoid(double x) {
-            return 1.0 / (1.0 + Math.Exp(-x));
+        public static float Sigmoid(float x) {
+            return 1.0f / (1.0f + Mathf.Exp(-x));
         }
 
         public void Feed(Layer previous) {
-            double prev = 0.0;
-            for (int i = 0; i < previous.weights.length; i++) {
+            float prev = 0.0f;
+            for (int i = 0; i < previous.weights.Length; i++) {
                 prev += previous.weights[i];
             }
             prev = Sigmoid(prev);
-            for (int i = 0; i < weights.length; i++) {
+            for (int i = 0; i < weights.Length; i++) {
                 this.weights[i] += prev;
             }
         }
     }
 
     private Layer[] layers;
-    private double LearningRate;
+    private float LearningRate;
 
     /* example1 : layers : [[2],[2],[1]] =>
      * inputLayer : 2 neurons
@@ -62,13 +64,13 @@ public class FeedForward {
      * inputLayer : 2 neurons
      * hiddenLayer 1 : 2 neurons , 1 bias
      * outputLayer : 1 neuron
-     *  
-    public FeedForward(int[,] layers, int[] range) {
-        for (int i = 0; i < layers.length; i++) {
-            if (layers[i].length == 1) {
+     */
+    public FeedForward(int[][] layers, int[] range) {
+        for (int i = 0; i < layers.Length; i++) {
+            if (layers[i].Length == 1) {
                 this.layers[i] = new Layer(layers[i][0], 0, range);
             }
-            if (layers[i].length == 2) {
+            if (layers[i].Length == 2) {
                 this.layers[i] = new Layer(layers[i][0], layers[i][1], range);
             }
         }
@@ -76,14 +78,14 @@ public class FeedForward {
 
     /**
      * Y = WX + bias
-     *
-    public double[] Forward(double[] inputLayer) {
-        if (this.layers.length >= 2) {
-            for (int i = 1; i < this.layers.length) {
+     */
+    public float[] Forward(float[] inputLayer) {
+        if (this.layers.Length >= 2) {
+			for (int i = 1; i < this.layers.Length ; i++) {
                 this.layers[i].Feed(this.layers[i-1]); 
             }
         }
-        return this.layers[this.layers.length-1];
+        return this.layers[this.layers.Length-1].weights;
     }
-	*/
+
 }

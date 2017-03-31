@@ -8,19 +8,24 @@ using UnityEngine;
  */
 public class DataManager : MonoBehaviour {
 
+	// The DataManager instance
 	public static DataManager INSTANCE;
-	public Generation currentGeneration;
-	public int generationNb;
 
+	// Properties
+	public Generation currentGeneration { get; set; }
+	public int generationNb { get; set; }
+
+	////////////////////////////////////////////////////////////////
+
+	// Awake method
 	void Awake () {
-		DontDestroyOnLoad(gameObject);
-
-		if (INSTANCE == null) {
-			INSTANCE = this;
-		} else {
+		if (INSTANCE != null) {
 			Destroy (gameObject);
 			return;
 		}
+
+		DontDestroyOnLoad(gameObject);
+		INSTANCE = this;
 
 		currentGeneration = new Generation ();
 		currentGeneration.RandomGeneration ();
