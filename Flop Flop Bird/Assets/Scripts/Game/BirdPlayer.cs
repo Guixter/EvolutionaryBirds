@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BirdPlayer : Bird {
 
-	void Update () {
+	public override void OnUpdate () {
 		if (Input.GetKeyDown ("space")) {
 			Fly ();
 		}

@@ -10,6 +10,7 @@ public class DataManager : MonoBehaviour {
 
 	public static DataManager INSTANCE;
 	public Generation currentGeneration;
+	public int generationNb;
 
 	void Awake () {
 		DontDestroyOnLoad(gameObject);
@@ -23,5 +24,6 @@ public class DataManager : MonoBehaviour {
 
 		currentGeneration = new Generation ();
 		currentGeneration.RandomGeneration ();
+		generationNb = 1;
 	}
 }
