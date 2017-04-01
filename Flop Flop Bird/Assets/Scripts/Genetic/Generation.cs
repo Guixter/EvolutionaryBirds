@@ -5,7 +5,7 @@ using UnityEngine;
 /*
  * A Generation is a set of genomes.
  */
-public class Generation {
+public class Generation : IComparer<Genome> {
 
 	// Some static constants
 	public static int POPULATION = 10;
@@ -37,6 +37,11 @@ public class Generation {
 					child.weights [j] = g2.weights [j];
 				}
 			}
+			for (int j = 0; j < child.thresholds.Count; j++) {
+				if (Random.value > .5f) {
+					child.thresholds [j] = g2.thresholds [j];
+				}
+			}
 
 			children.Add (child);
 		}
@@ -47,19 +52,25 @@ public class Generation {
 	// Compute the next generation
 	public Generation NextGeneration() {
 		Generation next = new Generation();
-		next.RandomGeneration ();
-		// TODO
 
-		/*
+		// Sort the genomes
+		genomes.Sort(this);
+		genomes.Reverse ();
+
 		// Elitism
 		for (int i = 0; i < POPULATION * ELITISM_FACTOR; i++) {
 			if (next.genomes.Count < POPULATION) {
-
+				next.genomes.Add (genomes[i].Clone());
 			}
 		}
-		*/
 
-		// TODO : set the scores to 0
+		// Random
+		for (int i = 0; i < POPULATION * RANDOM_FACTOR; i++) {
+			if (next.genomes.Count < POPULATION) {
+				Genome g = new Genome ();
+				next.genomes.Add (g);
+			}
+		}
 
 		return next;
 	}
@@ -76,6 +87,17 @@ public class Generation {
 				g.weights.Add (Random.value * 2 - 1);
 			}
 			genomes.Add (g);
+		}
+	}
+
+	// Comparison of 2 genomes
+	public int Compare (Genome x, Genome y) {
+		if (x.fitness > y.fitness) {
+			return 1;
+		} else if (x.fitness == y.fitness) {
+			return 0;
+		} else {
+			return -1;
 		}
 	}
 }

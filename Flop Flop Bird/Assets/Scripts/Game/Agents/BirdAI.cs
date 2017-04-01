@@ -15,6 +15,7 @@ public class BirdAI : Bird {
 
 	// Properties
 	public Genome g { get; set; }
+	public NeuralNetwork network { get; set; }
 
 	////////////////////////////////////////////////////////////////
 
@@ -33,6 +34,12 @@ public class BirdAI : Bird {
 
 	// Set the AI's neural network
 	public void SetNeural(Genome g) {
+		this.g = g;
+		this.network = new NeuralNetwork (g);
+	}
 
+	public override void Hit() {
+		base.Hit ();
+		g.fitness = fitness;
 	}
 }

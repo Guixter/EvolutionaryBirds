@@ -72,7 +72,7 @@ public abstract class Bird : MonoBehaviour {
 	}
 
 	// Called when the bird hits an obstacle
-	public void Hit() {
+	public virtual void Hit() {
 		rbody.simulated = false;
 		dead = true;
 		//Debug.Log (name + " HIT ! Fitness : " + fitness);

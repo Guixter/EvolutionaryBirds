@@ -21,10 +21,10 @@ public class Layer {
 		}
 	}
 
-	public List<float> ToThresholdList() {
+	public List<float> ToWeightList() {
 		List<float> l = new List<float>();
 		for (int i = 0; i < neurons.Count; i++) {
-			l.Add(neurons[i].threshold);
+			l.Add(neurons[i].currentWeight);
 		}
 		return l;
 	}

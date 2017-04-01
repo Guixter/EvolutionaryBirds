@@ -6,6 +6,7 @@ public class Neuron {
 
 	public List<Synapse> inputs;
 	public float threshold;
+	public float currentWeight;
 
 	public Neuron() {
 		inputs = new List<Synapse>();
@@ -15,7 +16,6 @@ public class Neuron {
 		foreach (Neuron n in previousNeurons) {
 			Synapse s = new Synapse ();
 			s.input = n;
-			s.output = this;
 			inputs.Add (s);
 		}
 	}

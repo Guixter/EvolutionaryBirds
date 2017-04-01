@@ -36,7 +36,7 @@ public class Genome {
 		Genome clone = new Genome ();
 
 		clone.nbLayers = nbLayers;
-		clone.fitness = fitness;
+		clone.fitness = 0;
 
 		foreach (int neurons in neuronsPerLayer) {
 			clone.neuronsPerLayer.Add (neurons);
@@ -51,5 +51,21 @@ public class Genome {
 		}
 
 		return clone;
+	}
+
+	public static Genome RandomGenome(List<int> structure) {
+		Genome g = new Genome ();
+		/*
+		g.nbLayers = structure.Count;
+		g.neuronsPerLayer = structure;
+
+		int nbNeurons = 0;
+		int nbSynapses = 0;
+
+		for (int i = 0; i < g.nbLayers; i++) {
+			nbNeurons += structure [i];
+		}
+		*/
+		return g;
 	}
 }
