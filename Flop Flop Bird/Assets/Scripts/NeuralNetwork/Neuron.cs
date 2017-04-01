@@ -5,7 +5,6 @@ using UnityEngine;
 public class Neuron {
 
 	public List<Synapse> inputs;
-	public float threshold;
 	public float currentWeight;
 
 	public Neuron() {

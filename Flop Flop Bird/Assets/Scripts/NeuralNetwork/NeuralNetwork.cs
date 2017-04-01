@@ -9,8 +9,6 @@ public class NeuralNetwork {
 	public NeuralNetwork(Genome g) {
 		
 		layers = new List<Layer>();
-		int cursorNeurons = 0;
-		int cursorSynapses = 0;
 
 		for (int i = 0; i < g.nbLayers; i++) {
 			Layer layer = new Layer (g.neuronsPerLayer[i]);
@@ -21,14 +19,10 @@ public class NeuralNetwork {
 				layers[i].SetPrevious(layers[i-1]);
 			}
 
-			// Set the threshold
+			// Set the weights
 			for (int j = 0 ; j < g.neuronsPerLayer[i] ; j++) {
-				layer.neurons[j].threshold = g.thresholds[cursorNeurons];
-				cursorNeurons++;
-
 				for (int k = 0; k < layer.neurons [j].inputs.Count; k++) {
-					layer.neurons [j].inputs [k].weight = g.weights [cursorSynapses];
-					cursorSynapses++;
+					layer.neurons [j].inputs [k].weight = g.weights [k];
 				}
 			}
 		}
@@ -41,10 +35,7 @@ public class NeuralNetwork {
 
 		for (int i = 0; i < g.nbLayers; i++) {
 			g.neuronsPerLayer.Add (layers[i].neurons.Count);
-
 			for (int j = 0; j < layers [i].neurons.Count; j++) {
-				g.thresholds.Add (layers [i].neurons[j].threshold);
-
 				for (int k = 0; k < layers [i].neurons [j].inputs.Count; k++) {
 					g.weights.Add (layers [i].neurons[j].inputs[k].weight);
 				}
@@ -52,6 +43,10 @@ public class NeuralNetwork {
 		}
 
 		return g;
+	}
+
+	public static float Sigmoid(float x) {
+		return 1.0f / (1.0f + Mathf.Exp(-x)); 
 	}
 
 	/**
@@ -64,9 +59,7 @@ public class NeuralNetwork {
 				for (int k = 0; k < layers[i].neurons[j].inputs.Count; k++) {
 					layers[i].neurons[j].currentWeight += layers[i].neurons[j].inputs[k].weight*layers[i].neurons[j].inputs[k].input.currentWeight;
 				}
-				if (layers [i].neurons [j].currentWeight > layers [i].neurons [j].threshold) {
-					layers [i].neurons [j].currentWeight = 0;
-				}
+				layers[i].neurons[j].currentWeight = NeuralNetwork.Sigmoid(layers[i].neurons[j].currentWeight);
 			}
         }
 		return layers [this.layers.Count - 1].ToWeightList ();

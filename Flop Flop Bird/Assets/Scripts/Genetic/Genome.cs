@@ -16,9 +16,6 @@ public class Genome {
 	// The number of neurons in each layer
 	public List<int> neuronsPerLayer;
 
-	// The thresholds of the neurons
-	public List<float> thresholds;
-
 	// The weights of the synapses
 	public List<float> weights;
 
@@ -52,20 +49,22 @@ public class Genome {
 
 		return clone;
 	}
-
+	/**
+	 * structure ex : [2,2,1]
+	 */
 	public static Genome RandomGenome(List<int> structure) {
 		Genome g = new Genome ();
-		/*
+		
 		g.nbLayers = structure.Count;
 		g.neuronsPerLayer = structure;
 
-		int nbNeurons = 0;
-		int nbSynapses = 0;
-
-		for (int i = 0; i < g.nbLayers; i++) {
-			nbNeurons += structure [i];
+		List<float> weights = new List<float>();
+		for (int i = 0; i < g.nbLayers; i++) { // layers
+			for (int j = 0; j < structure[i]; j++) { // neurons
+				g.weights.Add(Random.Range(-1.0f, 1.0f););
+			}
 		}
-		*/
+		g.weights = weights;
 		return g;
 	}
 }
