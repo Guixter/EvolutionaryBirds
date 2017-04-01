@@ -5,7 +5,6 @@ using UnityEngine;
 public class Synapse {
 
 	public Neuron input;
-	public Neuron output;
 	public float weight;
 
 }

@@ -53,4 +53,20 @@ public class NeuralNetwork {
 
 		return g;
 	}
+
+	/**
+	 * 
+	 */
+	public float[] Forward(float[] inputs) {
+		for (int i = 1; i < layers.Count ; i++) {
+			for (int j = 0; j < layers[i].neurons.Count; j++) {
+				float threshold = 0.0;
+				for (int k = 0; k < layers[i].neurons[j].inputs.Count; k++) {
+					threshold += layers[i].neurons[j].inputs[k].weight*layers[i].neurons[j].inputs[k].input;
+				}
+				layers[i].neurons[j].threshold = (threshold < layers[i].neurons[j].threshold) ? threshold : 0;
+			}
+        }
+        return layers[this.layers.Count-1].ToThresholdList();
+    }
 }

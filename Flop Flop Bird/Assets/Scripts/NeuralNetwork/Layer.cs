@@ -20,4 +20,12 @@ public class Layer {
 			neurons[i].SetPreviousNeurons (previous.neurons);
 		}
 	}
+
+	public List<float> ToThresholdList() {
+		List<float> l = new List<float>();
+		for (int i = 0; i < neurons.Count; i++) {
+			l.Add(neurons[i].threshold);
+		}
+		return l;
+	}
 }
