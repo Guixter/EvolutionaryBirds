@@ -24,7 +24,7 @@ public class Layer {
 	public List<float> ToWeightList() {
 		List<float> l = new List<float>();
 		for (int i = 0; i < neurons.Count; i++) {
-			l.Add(neurons[i].currentWeight);
+			l.Add(neurons[i].value);
 		}
 		return l;
 	}

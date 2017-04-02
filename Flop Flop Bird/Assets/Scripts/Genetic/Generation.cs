@@ -8,12 +8,20 @@ using UnityEngine;
 public class Generation : IComparer<Genome> {
 
 	// Some static constants
-	public static int POPULATION = 10;
+	public static int POPULATION = 100;
 	public static float ELITISM_FACTOR = .2f;
 	public static float RANDOM_FACTOR = .2f;
 	public static float MUTATION_RATE = .1f;
 	public static float MUTATION_RANGE = .5f;
 	public static int NB_CHILDREN = 2;
+	public static List<int> STRUCTURE;
+
+	static Generation() {
+		STRUCTURE = new List<int> ();
+		STRUCTURE.Add (4);
+		STRUCTURE.Add (4);
+		STRUCTURE.Add (1);
+	}
 
 	// Properties;
 	public List<Genome> genomes { get; set; }
@@ -33,13 +41,13 @@ public class Generation : IComparer<Genome> {
 			Genome child = g1.Clone ();
 
 			for (int j = 0; j < child.weights.Count; j++) {
-				if (Random.value > .5f) {
+				if (Random.value <= .5f) {
 					child.weights [j] = g2.weights [j];
 				}
-			}
-			for (int j = 0; j < child.thresholds.Count; j++) {
-				if (Random.value > .5f) {
-					child.thresholds [j] = g2.thresholds [j];
+
+				// Perform some mutations
+				if (Random.value <= MUTATION_RATE) {
+					child.weights [j] += Random.Range (-1f, 1f) * MUTATION_RANGE;
 				}
 			}
 
@@ -67,8 +75,24 @@ public class Generation : IComparer<Genome> {
 		// Random
 		for (int i = 0; i < POPULATION * RANDOM_FACTOR; i++) {
 			if (next.genomes.Count < POPULATION) {
-				Genome g = new Genome ();
-				next.genomes.Add (g);
+				next.genomes.Add (Genome.RandomGenome(STRUCTURE));
+			}
+		}
+
+		// Breed the current genomes
+		for (int i = 0; i < POPULATION; i++) {
+			for (int j = i + 1; j < POPULATION; j++) {
+				List<Genome> children = BreedGenomes (genomes [i], genomes [j]);
+
+				foreach (Genome g in children) {
+					if (next.genomes.Count < POPULATION) {
+						next.genomes.Add (g);
+					}
+				}
+
+				if (next.genomes.Count < POPULATION) {
+					break;
+				}
 			}
 		}
 
@@ -79,14 +103,7 @@ public class Generation : IComparer<Genome> {
 	public void RandomGeneration() {
 		genomes.Clear ();
 		for (int i = 0; i < POPULATION; i++) {
-			Genome g = new Genome ();
-			g.neuronsPerLayer.Add (2);
-			g.neuronsPerLayer.Add (2);
-			g.neuronsPerLayer.Add (1);
-			for (int j = 0; j < 5; j++) {
-				g.weights.Add (Random.value * 2 - 1);
-			}
-			genomes.Add (g);
+			genomes.Add (Genome.RandomGenome (STRUCTURE));
 		}
 	}
 

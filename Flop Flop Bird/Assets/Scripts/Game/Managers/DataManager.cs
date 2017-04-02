@@ -14,6 +14,8 @@ public class DataManager : MonoBehaviour {
 	// Properties
 	public Generation currentGeneration { get; set; }
 	public int generationNb { get; set; }
+	public float timeSpeed { get; set; }
+	public bool playing { get; set; }
 
 	////////////////////////////////////////////////////////////////
 
@@ -29,6 +31,8 @@ public class DataManager : MonoBehaviour {
 
 		currentGeneration = new Generation ();
 		currentGeneration.RandomGeneration ();
+		timeSpeed = 1;
+		playing = true;
 		generationNb = 1;
 	}
 }

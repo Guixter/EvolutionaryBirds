@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour {
 	private DataManager dataManager;
 	private GameObject player;
 	private List<GameObject> bots;
-	private float screenWidth;
-	private float screenHeight;
 	private float camXOffset;
 	private float decorMaxCovered;
 	private float pipesMaxCovered;
@@ -23,12 +21,17 @@ public class GameManager : MonoBehaviour {
 	public float PipesXGap, PipesYGap;
 	public Text GUIAliveBots, GUIPipes, GUIFitness, GUIGeneration;
 
+	// Properties
+	public GameObject nextPipe { get; set; }
+	public float screenWidth { get; set; }
+	public float screenHeight { get; set; }
+
 	////////////////////////////////////////////////////////////////
 
 	// Start the game
 	void Start () {
-		Time.timeScale = 1;
 		dataManager = DataManager.INSTANCE;
+		Time.timeScale = dataManager.timeSpeed;
 		screenHeight = 2 * Camera.main.orthographicSize;
 		screenWidth = screenHeight * Camera.main.aspect;
 		GUIGeneration.text = "Generation " + dataManager.generationNb;
@@ -42,7 +45,12 @@ public class GameManager : MonoBehaviour {
 		decorMiddle = null;
 
 		SpawnIAs ();
-		SpawnPlayer ();
+		if (dataManager.playing) {
+			SpawnPlayer ();
+		} else {
+			// TODO : get the best bot
+			player = bots [0];
+		}
 	}
 
 	// Spawn the IAs
@@ -125,6 +133,7 @@ public class GameManager : MonoBehaviour {
 			lastGateCrossed ++;
 		}
 		GUIPipes.text = "" + (lastGateCrossed + 1);
+		nextPipe = pipes[lastGateCrossed+1];
 
 		// Update the fitness
 		GUIFitness.text = "Fitness : " + player.GetComponent<Bird>().fitness.ToString("F2");
@@ -132,7 +141,7 @@ public class GameManager : MonoBehaviour {
 
 	// Update the menus
 	private void UpdateMenus() {
-		if (player.GetComponent<Bird> ().dead) {
+		if (player.GetComponent<Bird> ().dead && dataManager.playing) {
 			bool victory = true;
 
 			foreach (GameObject bot in bots) {
@@ -143,8 +152,33 @@ public class GameManager : MonoBehaviour {
 			}
 
 			GetComponent<MenuManager> ().ShowEndMenu (victory);
-		} else if (Input.GetKeyDown("escape")) {
+		} else if (player.GetComponent<Bird> ().dead) {
+			foreach (GameObject bot in bots) {
+				if (!bot.GetComponent<Bird> ().dead) {
+					player = bot;
+					return;
+				}
+			}
+
+			GetComponent<MenuManager> ().NextLevel ();
+		} else if (Input.GetKeyDown ("escape")) {
 			GetComponent<MenuManager> ().ShowPauseMenu ();
+		} else if (Input.GetKeyDown ("up")) {
+			GetComponent<MenuManager> ().SetTimeSpeed (10);
+			if (dataManager.playing) {
+				GetComponent<MenuManager> ().SetPlaying (false);
+				GetComponent<MenuManager> ().Restart ();
+			}
+		} else if (Input.GetKeyDown ("down")) {
+			GetComponent<MenuManager> ().SetTimeSpeed (.1f);
+			if (dataManager.playing) {
+				GetComponent<MenuManager> ().SetPlaying (false);
+				GetComponent<MenuManager> ().Restart ();
+			}
+		} else if (Input.GetKeyDown ("right")) {
+			GetComponent<MenuManager> ().SetTimeSpeed (1);
+			GetComponent<MenuManager> ().SetPlaying (true);
+			GetComponent<MenuManager> ().Restart ();
 		}
 	}
 

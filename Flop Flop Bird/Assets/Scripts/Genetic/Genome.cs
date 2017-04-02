@@ -25,7 +25,6 @@ public class Genome {
 		fitness = 0;
 		neuronsPerLayer = new List<int> ();
 		weights = new List<float> ();
-		thresholds = new List<float> ();
 	}
 
 	// Clone the genome
@@ -43,28 +42,21 @@ public class Genome {
 			clone.weights.Add (weight);
 		}
 
-		foreach (float threshold in thresholds) {
-			clone.thresholds.Add (threshold);
-		}
-
 		return clone;
 	}
-	/**
-	 * structure ex : [2,2,1]
-	 */
+
+	// Create a random genome respecting a given structure
 	public static Genome RandomGenome(List<int> structure) {
 		Genome g = new Genome ();
 		
 		g.nbLayers = structure.Count;
-		g.neuronsPerLayer = structure;
+		g.neuronsPerLayer = new List<int>(structure);
 
-		List<float> weights = new List<float>();
 		for (int i = 0; i < g.nbLayers; i++) { // layers
 			for (int j = 0; j < structure[i]; j++) { // neurons
-				g.weights.Add(Random.Range(-1.0f, 1.0f););
+				g.weights.Add(Random.Range(-1.0f, 1.0f));
 			}
 		}
-		g.weights = weights;
 		return g;
 	}
 }
