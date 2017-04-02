@@ -10,6 +10,9 @@ public class Genome {
 
 	public float fitness;
 
+	// The threshold
+	public float threshold;
+
 	// The number of layers in the neural network, including the input and the output
 	public int nbLayers;
 
@@ -23,6 +26,7 @@ public class Genome {
 	public Genome() {
 		nbLayers = 0;
 		fitness = 0;
+		threshold = 0;
 		neuronsPerLayer = new List<int> ();
 		weights = new List<float> ();
 	}
@@ -33,6 +37,7 @@ public class Genome {
 
 		clone.nbLayers = nbLayers;
 		clone.fitness = 0;
+		clone.threshold = threshold;
 
 		foreach (int neurons in neuronsPerLayer) {
 			clone.neuronsPerLayer.Add (neurons);
@@ -51,6 +56,7 @@ public class Genome {
 		
 		g.nbLayers = structure.Count;
 		g.neuronsPerLayer = new List<int>(structure);
+		g.threshold = Random.Range (-1.0f, 1.0f);
 
 		for (int i = 0; i < g.nbLayers; i++) { // layers
 			for (int j = 0; j < structure[i]; j++) { // neurons

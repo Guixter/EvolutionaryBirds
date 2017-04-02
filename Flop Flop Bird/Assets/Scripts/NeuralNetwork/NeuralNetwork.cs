@@ -37,7 +37,7 @@ public class NeuralNetwork {
 			g.neuronsPerLayer.Add (layers[i].neurons.Count);
 			for (int j = 0; j < layers [i].neurons.Count; j++) {
 				for (int k = 0; k < layers [i].neurons [j].inputs.Count; k++) {
-					g.weights.Add (layers [i].neurons[j].inputs[k].input.weight);
+					g.weights.Add (layers [i].neurons[j].inputs[k].weight);
 				}
 			}
 		}
@@ -61,7 +61,7 @@ public class NeuralNetwork {
 			for (int j = 0; j < layers[i].neurons.Count; j++) {
 				layers [i].neurons [j].value = 0;
 				for (int k = 0; k < layers[i].neurons[j].inputs.Count; k++) {
-					layers[i].neurons[j].value += layers[i].neurons[j].weight * layers[i].neurons[j].inputs[k].input.value;
+					layers[i].neurons[j].value += layers[i].neurons[j].weight * layers[i].neurons[j].inputs[k].value;
 				}
 				layers[i].neurons[j].value = NeuralNetwork.Sigmoid(layers[i].neurons[j].value);
 			}

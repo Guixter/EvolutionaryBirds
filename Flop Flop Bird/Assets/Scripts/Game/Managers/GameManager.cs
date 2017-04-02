@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
 
 	// Private attributes
 	private DataManager dataManager;
+	private MenuManager menuManager;
 	private GameObject player;
 	private List<GameObject> bots;
 	private float camXOffset;
@@ -14,42 +15,58 @@ public class GameManager : MonoBehaviour {
 	private float pipesMaxCovered;
 	private GameObject decorLeft, decorMiddle;
 	private List<GameObject> pipes;
+	private float semiPipeWidth;
 	private int lastGateCrossed;
 
 	// Parameters
 	public GameObject AIPrefab, PlayerPrefab, BackgroundPrefab, PipePrefab;
 	public float PipesXGap, PipesYGap;
 	public Text GUIAliveBots, GUIPipes, GUIFitness, GUIGeneration;
+	public GameObject timeUI;
 
 	// Properties
 	public GameObject nextPipe { get; set; }
 	public float screenWidth { get; set; }
 	public float screenHeight { get; set; }
+	public GameMode gameMode { get; set; }
 
 	////////////////////////////////////////////////////////////////
 
 	// Start the game
 	void Start () {
+		// Get the managers
 		dataManager = DataManager.INSTANCE;
-		Time.timeScale = dataManager.timeSpeed;
+		menuManager = GetComponent<MenuManager> ();
+		gameMode = dataManager.gameMode;
+
+		// Set some properties
 		screenHeight = 2 * Camera.main.orthographicSize;
 		screenWidth = screenHeight * Camera.main.aspect;
-		GUIGeneration.text = "Generation " + dataManager.generationNb;
-
 		pipes = new List<GameObject> ();
 		pipesMaxCovered = 0;
 		lastGateCrossed = -1;
-
 		decorMaxCovered = - screenWidth/2;
 		decorLeft = null;
 		decorMiddle = null;
+		semiPipeWidth = PipePrefab.GetComponentInChildren<SpriteRenderer> ().bounds.extents.x;
 
+		// Set the timescale
+		Time.timeScale = gameMode.timeSpeed;
+
+		// Print the current generation
+		GUIGeneration.text = "Generation " + dataManager.generationNb;
+
+		// Handle the game mode
+		HandleGameMode ();
+	}
+
+	private void HandleGameMode() {
 		SpawnIAs ();
-		if (dataManager.playing) {
+		if (gameMode.mode == GameMode.Modes.ONE_VS_ALL) {
 			SpawnPlayer ();
-		} else {
-			// TODO : get the best bot
+		} else if (gameMode.mode == GameMode.Modes.SIMULATION) {
 			player = bots [0];
+			timeUI.SetActive (true);
 		}
 	}
 
@@ -73,6 +90,14 @@ public class GameManager : MonoBehaviour {
 		player.name = "BirdPlayer";
 		camXOffset = Camera.main.transform.position.x - player.transform.position.x;
 		player.transform.SetParent (GameObject.Find("Birds").transform);
+	}
+
+	// Spawn the replay
+	private void SpawnReplay() {
+		/*player = Instantiate (PlayerPrefab);
+		player.name = "BirdPlayer";
+		camXOffset = Camera.main.transform.position.x - player.transform.position.x;
+		player.transform.SetParent (GameObject.Find("Birds").transform);*/
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -129,7 +154,7 @@ public class GameManager : MonoBehaviour {
 		GUIAliveBots.text = "Bots : " + aliveBots + "/" + bots.Count;
 
 		// Update the pipes
-		while ((pipes.Count > lastGateCrossed+1) && (pipes[lastGateCrossed+1].transform.position.x <= player.transform.position.x)) {
+		while ((pipes.Count > lastGateCrossed+1) && ((pipes[lastGateCrossed+1].transform.position.x + semiPipeWidth) <= player.transform.position.x)) {
 			lastGateCrossed ++;
 		}
 		GUIPipes.text = "" + (lastGateCrossed + 1);
@@ -141,7 +166,7 @@ public class GameManager : MonoBehaviour {
 
 	// Update the menus
 	private void UpdateMenus() {
-		if (player.GetComponent<Bird> ().dead && dataManager.playing) {
+		if (gameMode.mode == GameMode.Modes.ONE_VS_ALL && player.GetComponent<Bird> ().dead) {
 			bool victory = true;
 
 			foreach (GameObject bot in bots) {
@@ -151,8 +176,8 @@ public class GameManager : MonoBehaviour {
 				}
 			}
 
-			GetComponent<MenuManager> ().ShowEndMenu (victory);
-		} else if (player.GetComponent<Bird> ().dead) {
+			menuManager.ShowEndMenu (victory);
+		} else if (gameMode.mode == GameMode.Modes.SIMULATION && player.GetComponent<Bird> ().dead) {
 			foreach (GameObject bot in bots) {
 				if (!bot.GetComponent<Bird> ().dead) {
 					player = bot;
@@ -160,25 +185,9 @@ public class GameManager : MonoBehaviour {
 				}
 			}
 
-			GetComponent<MenuManager> ().NextLevel ();
+			menuManager.NextLevel ();
 		} else if (Input.GetKeyDown ("escape")) {
-			GetComponent<MenuManager> ().ShowPauseMenu ();
-		} else if (Input.GetKeyDown ("up")) {
-			GetComponent<MenuManager> ().SetTimeSpeed (10);
-			if (dataManager.playing) {
-				GetComponent<MenuManager> ().SetPlaying (false);
-				GetComponent<MenuManager> ().Restart ();
-			}
-		} else if (Input.GetKeyDown ("down")) {
-			GetComponent<MenuManager> ().SetTimeSpeed (.1f);
-			if (dataManager.playing) {
-				GetComponent<MenuManager> ().SetPlaying (false);
-				GetComponent<MenuManager> ().Restart ();
-			}
-		} else if (Input.GetKeyDown ("right")) {
-			GetComponent<MenuManager> ().SetTimeSpeed (1);
-			GetComponent<MenuManager> ().SetPlaying (true);
-			GetComponent<MenuManager> ().Restart ();
+			menuManager.ShowPauseMenu ();
 		}
 	}
 

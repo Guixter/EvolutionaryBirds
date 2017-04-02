@@ -8,18 +8,18 @@ using UnityEngine;
 public class Generation : IComparer<Genome> {
 
 	// Some static constants
-	public static int POPULATION = 100;
+	public static int POPULATION = 200;
 	public static float ELITISM_FACTOR = .2f;
 	public static float RANDOM_FACTOR = .2f;
 	public static float MUTATION_RATE = .1f;
 	public static float MUTATION_RANGE = .5f;
-	public static int NB_CHILDREN = 2;
+	public static int NB_CHILDREN = 1;
 	public static List<int> STRUCTURE;
 
 	static Generation() {
 		STRUCTURE = new List<int> ();
-		STRUCTURE.Add (4);
-		STRUCTURE.Add (4);
+		STRUCTURE.Add (2);
+		STRUCTURE.Add (2);
 		STRUCTURE.Add (1);
 	}
 
@@ -49,6 +49,13 @@ public class Generation : IComparer<Genome> {
 				if (Random.value <= MUTATION_RATE) {
 					child.weights [j] += Random.Range (-1f, 1f) * MUTATION_RANGE;
 				}
+			}
+
+			if (Random.value <= .5f) {
+				child.threshold = g2.threshold;
+			}
+			if (Random.value <= MUTATION_RATE) {
+				child.threshold += Random.Range (-1f, 1f) * MUTATION_RANGE;
 			}
 
 			children.Add (child);

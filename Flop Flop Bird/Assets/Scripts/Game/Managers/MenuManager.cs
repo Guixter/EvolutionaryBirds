@@ -58,14 +58,12 @@ public class MenuManager : MonoBehaviour {
 	public void ShowBotStats(BirdAI bot) {
 		this.bot = bot;
 		botStats.SetActive(true);
-		//Time.timeScale = 0;
 	}
 
 	// Hide the bot stats
 	public void HideBotStats() {
 		bot = null;
 		botStats.SetActive (false);
-		//Time.timeScale = dataManager.timeSpeed;
 	}
 
 	// Draw a bot stats
@@ -103,7 +101,7 @@ public class MenuManager : MonoBehaviour {
 		if (pause) {
 			pause = false;
 			pauseMenu.SetActive (false);
-			Time.timeScale = dataManager.timeSpeed;
+			Time.timeScale = dataManager.gameMode.timeSpeed;
 		}
 	}
 
@@ -125,15 +123,23 @@ public class MenuManager : MonoBehaviour {
 		SceneManager.LoadScene ("Game");
 	}
 
-	// Change the time speed
-	public void SetTimeSpeed(float t) {
-		dataManager.timeSpeed = t;
-		Time.timeScale = t;
-		Time.fixedDeltaTime = t * 0.02f;
+	////////////////////////////////////////////////////////////////
+
+	// Slow motion
+	public void SlowMotion() {
+		dataManager.gameMode.timeSpeed = .1f;
+		Time.timeScale = .1f;
 	}
 
-	// Set whether there is a player or not
-	public void SetPlaying(bool p) {
-		dataManager.playing = p;
+	// Normal time speed
+	public void NormalSpeed() {
+		dataManager.gameMode.timeSpeed = 1;
+		Time.timeScale = 1;
+	}
+
+	// Fast foward
+	public void FastForward() {
+		dataManager.gameMode.timeSpeed = 50;
+		Time.timeScale = 50;
 	}
 }

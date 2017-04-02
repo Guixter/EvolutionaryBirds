@@ -65,7 +65,8 @@ public abstract class Bird : MonoBehaviour {
 	// Let the bird fly
 	public void Fly() {
 		if (!dead) {
-			rbody.AddForce (new Vector2 (0, Y_impulse));
+			//rbody.AddForce (new Vector2 (0, Y_impulse));
+			rbody.velocity = new Vector2(rbody.velocity.x, Y_impulse);
 			render.sprite = AnimationFlap;
 			lastFlap = Time.time;
 		}
@@ -75,7 +76,6 @@ public abstract class Bird : MonoBehaviour {
 	public virtual void Hit() {
 		rbody.simulated = false;
 		dead = true;
-		//Debug.Log (name + " HIT ! Fitness : " + fitness);
 	}
 
 	// Handle the collision with an obstacle
