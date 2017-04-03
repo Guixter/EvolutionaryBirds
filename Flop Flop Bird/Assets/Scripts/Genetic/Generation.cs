@@ -8,7 +8,7 @@ using UnityEngine;
 public class Generation : IComparer<Genome> {
 
 	// Some static constants
-	public static int POPULATION = 200;
+	public static int POPULATION = 50;
 	public static float ELITISM_FACTOR = .2f;
 	public static float RANDOM_FACTOR = .2f;
 	public static float MUTATION_RATE = .1f;

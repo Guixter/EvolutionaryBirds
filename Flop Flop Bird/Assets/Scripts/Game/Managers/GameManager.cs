@@ -8,18 +8,17 @@ public class GameManager : MonoBehaviour {
 	// Private attributes
 	private DataManager dataManager;
 	private MenuManager menuManager;
-	private GameObject player;
 	private List<GameObject> bots;
 	private float camXOffset;
 	private float decorMaxCovered;
 	private float pipesMaxCovered;
 	private GameObject decorLeft, decorMiddle;
-	private List<GameObject> pipes;
 	private float semiPipeWidth;
 	private int lastGateCrossed;
+	private int replayPipeCursor;
 
 	// Parameters
-	public GameObject AIPrefab, PlayerPrefab, BackgroundPrefab, PipePrefab;
+	public GameObject AIPrefab, PlayerPrefab, ReplayPrefab, BackgroundPrefab, PipePrefab;
 	public float PipesXGap, PipesYGap;
 	public Text GUIAliveBots, GUIPipes, GUIFitness, GUIGeneration;
 	public GameObject timeUI;
@@ -29,6 +28,8 @@ public class GameManager : MonoBehaviour {
 	public float screenWidth { get; set; }
 	public float screenHeight { get; set; }
 	public GameMode gameMode { get; set; }
+	public GameObject player { get; set; }
+	public List<GameObject> pipes { get; set; }
 
 	////////////////////////////////////////////////////////////////
 
@@ -49,6 +50,7 @@ public class GameManager : MonoBehaviour {
 		decorLeft = null;
 		decorMiddle = null;
 		semiPipeWidth = PipePrefab.GetComponentInChildren<SpriteRenderer> ().bounds.extents.x;
+		replayPipeCursor = 0;
 
 		// Set the timescale
 		Time.timeScale = gameMode.timeSpeed;
@@ -63,7 +65,11 @@ public class GameManager : MonoBehaviour {
 	private void HandleGameMode() {
 		SpawnIAs ();
 		if (gameMode.mode == GameMode.Modes.ONE_VS_ALL) {
-			SpawnPlayer ();
+			if (gameMode.replayBird) {
+				SpawnReplay ();
+			} else {
+				SpawnPlayer ();
+			}
 		} else if (gameMode.mode == GameMode.Modes.SIMULATION) {
 			player = bots [0];
 			timeUI.SetActive (true);
@@ -94,10 +100,11 @@ public class GameManager : MonoBehaviour {
 
 	// Spawn the replay
 	private void SpawnReplay() {
-		/*player = Instantiate (PlayerPrefab);
-		player.name = "BirdPlayer";
+		player = Instantiate (ReplayPrefab);
+		player.GetComponent<BirdReplay> ().flaps = gameMode.replayFlaps;
+		player.name = "BirdReplay";
 		camXOffset = Camera.main.transform.position.x - player.transform.position.x;
-		player.transform.SetParent (GameObject.Find("Birds").transform);*/
+		player.transform.SetParent (GameObject.Find("Birds").transform);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -129,7 +136,13 @@ public class GameManager : MonoBehaviour {
 		while (pipesMaxCovered < decorMaxCovered) {
 			// Chose the pipe's position
 			pipesMaxCovered += PipesXGap;
-			float yPos = (Random.value - .5f) * (screenHeight - PipesYGap);
+			float yPos;
+			if (gameMode.replayBird && replayPipeCursor < gameMode.replayPipes.Count) {
+				yPos = gameMode.replayPipes [replayPipeCursor];
+				replayPipeCursor++;
+			} else {
+				yPos = (Random.value - .5f) * (screenHeight - PipesYGap);
+			}
 
 			// Spawn the pipe
 			GameObject o = Instantiate(PipePrefab);

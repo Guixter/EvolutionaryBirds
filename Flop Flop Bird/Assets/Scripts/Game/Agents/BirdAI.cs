@@ -11,6 +11,9 @@ public class BirdAI : Bird {
 	private float flapTime;
 	private GameManager gameManager;
 
+	// Parameters
+	public Color color1, color2;
+
 	// Properties
 	public Genome g { get; set; }
 	public NeuralNetwork network { get; set; }
@@ -20,6 +23,7 @@ public class BirdAI : Bird {
 	// Called when the bird is started
 	protected override void OnStart() {
 		gameManager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
+		GetComponent<SpriteRenderer> ().color = Color.Lerp (color1, color2, Random.value);
 	}
 
 	// Called when the bird is clicked

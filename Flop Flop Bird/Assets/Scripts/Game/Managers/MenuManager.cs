@@ -14,9 +14,8 @@ public class MenuManager : MonoBehaviour {
 	private DataManager dataManager;
 
 	// Parameters
-	public GameObject pauseMenu;
-	public GameObject endMenu;
-	public GameObject victoryButton;
+	public GameObject pauseMenu, endMenu;
+	public GameObject victoryButton, replayButton;
 	public GameObject botStats;
 	public Text leftColumn, midColumn, rightColumn;
 
@@ -42,6 +41,7 @@ public class MenuManager : MonoBehaviour {
 	// Show the end menu (whether it is a victory or not)
 	public void ShowEndMenu(bool victory) {
 		victoryButton.SetActive (victory);
+		replayButton.SetActive (dataManager.gameMode.mode == GameMode.Modes.ONE_VS_ALL);
 		pause = true;
 		endMenu.SetActive (true);
 		Time.timeScale = 0;
@@ -107,16 +107,34 @@ public class MenuManager : MonoBehaviour {
 
 	// Restart the level
 	public void Restart() {
+		dataManager.gameMode.replayBird = false;
 		SceneManager.LoadScene ("Game");
 	}
 
 	// Go to the main menu
 	public void Menu() {
+		dataManager.gameMode.replayBird = false;
 		SceneManager.LoadScene ("MainMenu");
+	}
+
+	// Watch the replay
+	public void Replay() {
+		dataManager.gameMode.replayBird = true;
+		GameManager gameManager = GetComponent<GameManager> ();
+		if (gameManager.player.GetComponent<BirdPlayer> () != null) {
+			dataManager.gameMode.replayFlaps = GetComponent<GameManager> ().player.GetComponent<BirdPlayer> ().flaps;
+			List<float> pipeList = new List<float>();
+			foreach (GameObject o in gameManager.pipes) {
+				pipeList.Add (o.GetComponent<Pipe>().yPos);
+			}
+			dataManager.gameMode.replayPipes = pipeList;
+		}
+		SceneManager.LoadScene ("Game");
 	}
 
 	// Go to the next level
 	public void NextLevel() {
+		dataManager.gameMode.replayBird = false;
 		dataManager.currentGeneration = dataManager.currentGeneration.NextGeneration ();
 		dataManager.generationNb++;
 

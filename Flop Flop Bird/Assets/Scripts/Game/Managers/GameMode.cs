@@ -12,6 +12,7 @@ public class GameMode {
 
 	public bool replayBird { get; set; }
 	public List<float> replayFlaps { get; set; }
+	public List<float> replayPipes { get; set; }
 
 	public GameMode() {
 		mode = Modes.SIMULATION;
@@ -19,5 +20,6 @@ public class GameMode {
 
 		replayBird = false;
 		replayFlaps = null;
+		replayPipes = null;
 	}
 }

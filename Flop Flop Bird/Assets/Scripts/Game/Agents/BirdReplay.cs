@@ -17,7 +17,7 @@ public class BirdReplay : Bird {
 
 	// Called when the bird is updated
 	protected override void OnUpdate () {
-		while (cursor < flaps.Count && flaps[cursor] >= (Time.time - beginning)) {
+		while (cursor < flaps.Count && flaps[cursor] <= (Time.time - beginning)) {
 			Fly ();
 			cursor ++;
 		}
