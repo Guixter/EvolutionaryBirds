@@ -114,6 +114,7 @@ public class MenuManager : MonoBehaviour {
 	// Go to the main menu
 	public void Menu() {
 		dataManager.gameMode.replayBird = false;
+		NormalSpeed ();
 		SceneManager.LoadScene ("MainMenu");
 	}
 
@@ -157,7 +158,7 @@ public class MenuManager : MonoBehaviour {
 
 	// Fast foward
 	public void FastForward() {
-		dataManager.gameMode.timeSpeed = 50;
-		Time.timeScale = 50;
+		dataManager.gameMode.timeSpeed = 10;
+		Time.timeScale = 10;
 	}
 }

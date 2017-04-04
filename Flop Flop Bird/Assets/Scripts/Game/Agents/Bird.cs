@@ -12,12 +12,14 @@ public abstract class Bird : MonoBehaviour {
 	private SpriteRenderer render;
 	private float startX;
 	private float lastFlap;
+	private AudioSource audioSource;
 
 	// Parameters
 	public float X_speed;
 	public float Y_impulse;
 	public float AnimationFlapTime;
 	public Sprite AnimationIdle, AnimationFlap;
+	public AudioClip flap, hit;
 
 	// Properties
 	public bool dead { get; set; }
@@ -29,6 +31,7 @@ public abstract class Bird : MonoBehaviour {
 	void Start () {
 		rbody = GetComponent<Rigidbody2D> ();
 		render = GetComponent<SpriteRenderer> ();
+		audioSource = GetComponent<AudioSource> ();
 
 		dead = false;
 		startX = transform.position.x;
@@ -66,6 +69,9 @@ public abstract class Bird : MonoBehaviour {
 	public void Fly() {
 		if (!dead) {
 			//rbody.AddForce (new Vector2 (0, Y_impulse));
+			if (lastFlap == -1) {
+				Play ("FLAP");
+			}
 			rbody.velocity = new Vector2(rbody.velocity.x, Y_impulse);
 			render.sprite = AnimationFlap;
 			lastFlap = Time.time;
@@ -76,6 +82,7 @@ public abstract class Bird : MonoBehaviour {
 	public virtual void Hit() {
 		rbody.simulated = false;
 		dead = true;
+		Play ("HIT");
 	}
 
 	// Handle the collision with an obstacle
@@ -83,5 +90,22 @@ public abstract class Bird : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Hit")) {
 			Hit ();
 		}
+	}
+
+	// Play a sound
+	public void Play(string sound) {
+		switch (sound) {
+		case "FLAP":
+			audioSource.clip = flap;
+			break;
+		case "HIT":
+			audioSource.clip = hit;
+			break;
+		default:
+			break;
+		}
+
+		audioSource.pitch = Random.Range (.95f, 1.05f);
+		audioSource.Play ();
 	}
 }
