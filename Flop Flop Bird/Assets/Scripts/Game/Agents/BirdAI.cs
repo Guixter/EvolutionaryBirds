@@ -27,10 +27,10 @@ public class BirdAI : Bird {
 	}
 
 	// Called when the bird is clicked
-	void OnMouseDown() {
+	/*void OnMouseDown() {
 		MenuManager m = GameObject.Find ("GameManager").GetComponent<MenuManager> ();
 		m.ShowBotStats (this);
-	}
+	}*/
 
 	// Called when the bird is updated
 	protected override void OnUpdate () {
@@ -39,8 +39,6 @@ public class BirdAI : Bird {
 			inputs [0] = transform.position.y / gameManager.screenHeight;
 			inputs [1] = - gameManager.nextPipe.GetComponent<Pipe>().yPos / gameManager.screenHeight;
 			List<float> result = network.Forward (inputs);
-
-			//Debug.Log (inputs[0] + " + " + inputs[1] + " = " + result[0]);
 
 			if (result.Count > 0 && result [0] > .4f) {
 				Fly ();

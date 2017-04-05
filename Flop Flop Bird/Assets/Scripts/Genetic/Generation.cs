@@ -10,7 +10,7 @@ public class Generation : IComparer<Genome> {
 	// Some static constants
 	public static int POPULATION = 50;
 	public static float ELITISM_FACTOR = .2f;
-	public static float RANDOM_FACTOR = .2f;
+	public static float RANDOM_FACTOR = .1f;
 	public static float MUTATION_RATE = .1f;
 	public static float MUTATION_RANGE = .5f;
 	public static int NB_CHILDREN = 1;
@@ -86,19 +86,42 @@ public class Generation : IComparer<Genome> {
 			}
 		}
 
-		// Breed the current genomes
+		// Get the total fitness
+		float totalFitness = 0;
 		for (int i = 0; i < POPULATION; i++) {
-			for (int j = i + 1; j < POPULATION; j++) {
-				List<Genome> children = BreedGenomes (genomes [i], genomes [j]);
+			totalFitness += genomes [i].fitness;
+		}
 
-				foreach (Genome g in children) {
-					if (next.genomes.Count < POPULATION) {
-						next.genomes.Add (g);
-					}
+		// Breed some genomes
+		while (next.genomes.Count < POPULATION) {
+			float fit1 = Random.value * totalFitness;
+			float fit2 = Random.value * totalFitness;
+			Genome parent1 = null, parent2 = null;
+
+			float currentFit = 0;
+
+			for (int i = 0; i < POPULATION; i++) {
+
+				if (parent1 == null && fit1 <= currentFit + genomes[i].fitness) {
+					parent1 = genomes [i];
 				}
 
-				if (next.genomes.Count < POPULATION) {
+				if (parent2 == null && fit2 <= currentFit + genomes[i].fitness) {
+					parent2 = genomes [i];
+				}
+
+				if (parent1 != null && parent2 != null) {
 					break;
+				}
+
+				currentFit += genomes [i].fitness;
+			}
+
+			List<Genome> children = BreedGenomes (parent1, parent2);
+
+			foreach (Genome g in children) {
+				if (next.genomes.Count < POPULATION) {
+					next.genomes.Add (g);
 				}
 			}
 		}

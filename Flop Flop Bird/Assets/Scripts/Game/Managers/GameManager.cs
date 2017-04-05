@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour {
 	private float camXOffset;
 	private float decorMaxCovered;
 	private float pipesMaxCovered;
-	private GameObject decorLeft, decorMiddle;
 	private float semiPipeWidth;
 	private int lastGateCrossed;
 	private int replayPipeCursor;
@@ -47,13 +46,14 @@ public class GameManager : MonoBehaviour {
 		pipesMaxCovered = 0;
 		lastGateCrossed = -1;
 		decorMaxCovered = - screenWidth/2;
-		decorLeft = null;
-		decorMiddle = null;
 		semiPipeWidth = PipePrefab.GetComponentInChildren<SpriteRenderer> ().bounds.extents.x;
 		replayPipeCursor = 0;
 
 		// Set the timescale
 		Time.timeScale = gameMode.timeSpeed;
+		if (gameMode.mode == GameMode.Modes.ONE_VS_ALL) {
+			Cursor.visible = false;
+		}
 
 		// Print the current generation
 		GUIGeneration.text = "Generation " + dataManager.generationNb;
@@ -117,17 +117,11 @@ public class GameManager : MonoBehaviour {
 
 	// Update the decor
 	private void UpdateDecor() {
-		if (Camera.main.transform.position.x + screenWidth / 2 >= decorMaxCovered) {
+		if (Camera.main.transform.position.x + BackgroundPrefab.GetComponent<SpriteRenderer>().bounds.extents.x >= decorMaxCovered) {
 			GameObject o = Instantiate (BackgroundPrefab);
 			o.transform.position = new Vector3 (decorMaxCovered + screenWidth/2, o.transform.position.y, o.transform.position.z);
 			o.transform.SetParent (GameObject.Find("Decors").transform);
-			decorMaxCovered += screenWidth;
-
-			if (decorLeft != null) {
-				Destroy (decorLeft);
-			}
-			decorLeft = decorMiddle;
-			decorMiddle = o;
+			decorMaxCovered += BackgroundPrefab.GetComponent<SpriteRenderer>().bounds.size.x;
 		}
 	}
 
@@ -141,7 +135,7 @@ public class GameManager : MonoBehaviour {
 				yPos = gameMode.replayPipes [replayPipeCursor];
 				replayPipeCursor++;
 			} else {
-				yPos = (Random.value - .5f) * (screenHeight - PipesYGap);
+				yPos = Random.Range(-.4f, .4f) * (screenHeight - PipesYGap);
 			}
 
 			// Spawn the pipe
@@ -179,17 +173,24 @@ public class GameManager : MonoBehaviour {
 
 	// Update the menus
 	private void UpdateMenus() {
-		if (gameMode.mode == GameMode.Modes.ONE_VS_ALL && player.GetComponent<Bird> ().dead) {
-			bool victory = true;
+		if (gameMode.mode == GameMode.Modes.ONE_VS_ALL) {
+			if (player.GetComponent<Bird> ().dead) {
+				menuManager.ShowEndMenu (false);
+			} else {
+				bool victory = true;
 
-			foreach (GameObject bot in bots) {
-				if (!bot.GetComponent<Bird> ().dead) {
-					victory = false;
-					break;
+				foreach (GameObject bot in bots) {
+					if (!bot.GetComponent<Bird> ().dead) {
+						victory = false;
+						break;
+					}
+				}
+
+				if (victory) {
+					menuManager.ShowEndMenu (true);
 				}
 			}
 
-			menuManager.ShowEndMenu (victory);
 		} else if (gameMode.mode == GameMode.Modes.SIMULATION && player.GetComponent<Bird> ().dead) {
 			foreach (GameObject bot in bots) {
 				if (!bot.GetComponent<Bird> ().dead) {
@@ -199,7 +200,9 @@ public class GameManager : MonoBehaviour {
 			}
 
 			menuManager.NextLevel ();
-		} else if (Input.GetKeyDown ("escape")) {
+		}
+
+		if (Input.GetKeyDown ("escape")) {
 			menuManager.ShowPauseMenu ();
 		}
 	}

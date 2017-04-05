@@ -8,6 +8,11 @@ using UnityEngine.SceneManagement;
  */
 public class MainMenuManager : MonoBehaviour {
 
+	// Start
+	void Start() {
+		Cursor.visible = true;
+	}
+
 	// One vs All mode
 	public void OneVsAll() {
 		DataManager dataManager = DataManager.INSTANCE;
@@ -28,5 +33,10 @@ public class MainMenuManager : MonoBehaviour {
 		dataManager.gameMode.mode = GameMode.Modes.SIMULATION;
 
 		SceneManager.LoadScene ("Game");
+	}
+
+	// Exit Game
+	public void Exit() {
+		Application.Quit ();
 	}
 }

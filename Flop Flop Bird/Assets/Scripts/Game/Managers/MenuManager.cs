@@ -45,6 +45,7 @@ public class MenuManager : MonoBehaviour {
 		pause = true;
 		endMenu.SetActive (true);
 		Time.timeScale = 0;
+		Cursor.visible = true;
 	}
 
 	// Show the pause menu
@@ -52,6 +53,7 @@ public class MenuManager : MonoBehaviour {
 		pause = true;
 		pauseMenu.SetActive (true);
 		Time.timeScale = 0;
+		Cursor.visible = true;
 	}
 
 	// Show the bot stats
@@ -102,6 +104,7 @@ public class MenuManager : MonoBehaviour {
 			pause = false;
 			pauseMenu.SetActive (false);
 			Time.timeScale = dataManager.gameMode.timeSpeed;
+			Cursor.visible = false;
 		}
 	}
 
